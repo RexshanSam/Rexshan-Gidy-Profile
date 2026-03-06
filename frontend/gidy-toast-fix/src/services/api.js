@@ -1,6 +1,15 @@
 import axios from 'axios'
 
+import axios from 'axios'
+
 const BASE = import.meta.env.VITE_API_URL || '/api'
+
+export const assetUrl = (path) => {
+  if (!path) return ''
+  if (path.startsWith('http')) return path
+  const backendBase = (import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')
+  return backendBase ? `${backendBase}${path}` : path
+}
 
 const api = axios.create({
   baseURL: BASE,

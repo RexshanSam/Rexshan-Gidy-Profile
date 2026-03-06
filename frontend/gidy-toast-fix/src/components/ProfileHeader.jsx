@@ -55,10 +55,6 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
     }
   }
 
-  /**
-   * Upload photo → POST /api/profiles/{id}/photo (multipart).
-   * Backend saves file to /uploads directory, stores URL in MySQL.
-   */
   const handlePhotoChange = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -79,10 +75,6 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
     }
   }
 
-  /**
-   * Upload resume → POST /api/profiles/{id}/resume (multipart).
-   * Backend saves file, stores URL in MySQL.
-   */
   const handleResumeChange = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -117,7 +109,7 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
     ? profile.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     : 'RS'
 
-  const avatarSrc = form.avatarUrl || profile?.avatarUrl
+  const avatarSrc = assetUrl(form.avatarUrl || profile?.avatarUrl || '')
 
   return (
     <div className="card p-6 animate-slide-up">
@@ -125,7 +117,6 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
 
         {/* Avatar + Info */}
         <div className="flex items-start gap-4">
-          {/* Clickable avatar with camera overlay */}
           <div className="relative group flex-shrink-0">
             <div className="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
               {avatarSrc ? (
@@ -141,18 +132,15 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
                 </div>
               )}
             </div>
-            {/* Camera overlay — click to upload photo */}
             {!uploading && (
               <label className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 rounded-full cursor-pointer transition-all">
                 <Camera size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                 <input ref={fileRef} type="file" className="hidden" accept="image/*" onChange={handlePhotoChange} />
               </label>
             )}
-            {/* Online dot */}
             <div className="absolute bottom-0.5 right-0.5 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900" />
           </div>
 
-          {/* Name / designation */}
           <div className="flex-1 min-w-0">
             {editing ? (
               <div className="space-y-2">
@@ -192,7 +180,6 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
           </div>
         </div>
 
-        {/* Edit / Save / Cancel buttons */}
         <div className="flex items-center gap-2">
           {editing ? (
             <>
@@ -219,7 +206,6 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
         </div>
       </div>
 
-      {/* Bio */}
       <div className="mb-4">
         {editing ? (
           <textarea value={form.bio}
@@ -232,7 +218,6 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
         )}
       </div>
 
-      {/* Additional edit fields */}
       {editing && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800">
           <div>
@@ -276,7 +261,6 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
         </div>
       )}
 
-      {/* Bottom row */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4 flex-wrap">
           {profile?.email && !editing && (
@@ -297,7 +281,6 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
               <Globe size={13} /> {profile.website.replace('https://', '')}
             </a>
           )}
-          {/* Resume upload + download */}
           <div className="flex items-center gap-2">
             <label className={`flex items-center gap-2 px-4 py-1.5 rounded-lg border border-dashed border-indigo-300 dark:border-indigo-700 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all cursor-pointer ${uploadingResume ? 'opacity-60 pointer-events-none' : ''}`}>
               {uploadingResume
@@ -307,7 +290,7 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
               <input ref={resumeFileRef} type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={handleResumeChange} />
             </label>
             {profile?.resumeUrl ? (
-              <a href={profile.resumeUrl} target="_blank" rel="noreferrer"
+              <a href={assetUrl(profile.resumeUrl)} target="_blank" rel="noreferrer" download
                 className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
                 <Download size={14} /> Download Resume
               </a>
@@ -319,7 +302,6 @@ export default function ProfileHeader({ profile, onUpdate, offline }) {
           </div>
         </div>
 
-        {/* League badge */}
         <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800">
           <span className="text-2xl">🥉</span>
           <div className="text-right">

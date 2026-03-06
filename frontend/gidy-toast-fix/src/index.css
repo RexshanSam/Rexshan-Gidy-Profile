@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@layer base {
+@theme {
   * { box-sizing: border-box; }
 
   body {

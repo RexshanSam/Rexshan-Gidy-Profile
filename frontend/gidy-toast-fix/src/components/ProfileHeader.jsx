@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { Mail, Download, MapPin, MoreVertical, Camera, Pencil, Save, X, Phone, Globe, CheckCircle, Upload, FileText } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { profileApi } from '../services/api'
+import { profileApi, assetUrl } from '../services/api'
 
 export default function ProfileHeader({ profile, onUpdate, offline }) {
   const [editing,         setEditing]         = useState(false)
